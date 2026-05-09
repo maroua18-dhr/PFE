@@ -53,8 +53,17 @@ if (in_array($current_page, $protected_pages)) {
             </div>
 
             <div class="search-box">
-                <form action="products/search.php" method="GET">
+                <form action="/student-market/products/search.php" method="GET">
                     <input type="text" name="search" placeholder="Rechercher un produit...">
+                    <div class="search-filters">
+                        <?php if(isset($_SESSION['user'])): ?>
+                            <label>
+                                <input type="checkbox" name="use_profile_filters" value="1">
+                                Mon niveau + filière
+                            </label>
+                        <?php endif; ?>
+                        <input type="text" name="desired_filiere" placeholder="Filière désirée...">
+                    </div>
                     <button type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
                 </form>
             </div>

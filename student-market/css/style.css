@@ -368,6 +368,32 @@ h1, h2, h3 {
     border: none;      /* Enlève la bordure par défaut */
     background: transparent;
 }
+
+.search-filters {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-left: 10px;
+}
+
+.search-filters label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.8rem;
+    color: #555;
+    white-space: nowrap;
+}
+
+.search-filters input[type="text"] {
+    min-width: 150px;
+    font-size: 0.85rem;
+    padding: 6px 8px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: #fff;
+}
+
 /* Actions (Icônes) */
 .header-actions {
     display: flex;
