@@ -7,21 +7,21 @@ require 'config/database.php';
 $error = '';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $matricule = $_POST['matricule'];
+    $matricule = trim($_POST['matricule']);
     $password = $_POST['password'];
-    
+
     $sql = "SELECT * FROM users WHERE matricule = ?";
     $stmt = $conn->prepare($sql);
     $stmt->execute([$matricule]);
     $user = $stmt->fetch();
-    
+
     if ($user && password_verify($password, $user['password'])) {
         // Vérifier le statut du compte
         if ($user['status'] == 'en_attente') {
-            $error = "⏳ Votre compte est en attente de validation par l'administrateur. Veuillez patienter.";
+            $error = "Votre compte est en attente de validation par l'administrateur. Veuillez patienter.";
         } elseif ($user['status'] == 'rejete') {
             $reason = $user['admin_message'] ?: "Non spécifiée";
-            $error = "❌ Votre compte a été rejeté. Raison : " . $reason;
+            $error = "Votre compte a été rejeté. Raison : " . $reason;
         } elseif ($user['status'] == 'approuve') {
             $_SESSION['user'] = [
                 'id' => $user['id'],
@@ -42,33 +42,46 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 }
 
-include 'includes/header.php'; 
+include 'includes/header.php';
 ?>
 
-<div class="container" style="max-width: 450px; margin-top: 100px;">
-    <h2 style="text-align: center; margin-bottom: 30px; color: var(--primary);">Connexion</h2>
+<div class="container auth-container">
+    <div class="auth-header">
+        <span class="eyebrow">Bon retour</span>
+        <h2>Connexion</h2>
+        <p>Connectez-vous avec votre matricule pour accéder à UniShare.</p>
+    </div>
 
     <?php if(!empty($error)): ?>
-        <div class="error-message" style="background: rgba(244, 67, 54, 0.2); border: 1px solid #f44336; color: #f44336; padding: 12px; border-radius: 8px; margin-bottom: 20px; text-align: center;">
-            <i class="fa-solid fa-exclamation-triangle"></i> <?php echo $error; ?>
+        <div class="message-box message-error">
+            <i class="fa-solid fa-exclamation-triangle"></i>
+            <?php echo htmlspecialchars($error); ?>
         </div>
     <?php endif; ?>
 
-    <form method="POST">
-        <div style="margin-bottom: 20px;">
-            <label style="display: block; margin-bottom: 8px; opacity: 0.8;">Matricule</label>
-            <input type="text" name="matricule" placeholder="Ex: 2020350123" required>
+    <form method="POST" class="auth-form">
+        <div class="form-group">
+            <label for="matricule">Matricule</label>
+            <input
+                type="text"
+                id="matricule"
+                name="matricule"
+                placeholder="Ex: 2020350123"
+                autocomplete="username"
+                required
+                value="<?php echo isset($_POST['matricule']) ? htmlspecialchars($_POST['matricule']) : ''; ?>"
+            >
         </div>
-        
-        <div style="margin-bottom: 25px;">
-            <label style="display: block; margin-bottom: 8px; opacity: 0.8;">Mot de passe</label>
-            <input type="password" name="password" required>
+
+        <div class="form-group">
+            <label for="password">Mot de passe</label>
+            <input type="password" id="password" name="password" autocomplete="current-password" required>
         </div>
 
         <button type="submit">Se connecter</button>
     </form>
 
-    <div style="text-align: center; margin-top: 20px;">
+    <div class="auth-switch">
         <a href="register.php">Pas encore de compte ? <span style="font-weight: bold;">S'inscrire</span></a>
     </div>
 </div>

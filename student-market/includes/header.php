@@ -7,6 +7,7 @@ if (session_status() === PHP_SESSION_NONE) {
 // Vérifier si l'utilisateur est connecté et approuvé pour les pages protégées
 $protected_pages = ['dashboard.php', 'add_product.php', 'profile.php', 'edit_product.php'];
 $current_page = basename($_SERVER['PHP_SELF']);
+$base_path = '/student-market/';
 
 // Pages accessibles uniquement aux admins
 $admin_pages = ['validate_users.php', 'approved_users.php'];
@@ -24,12 +25,12 @@ if (in_array($current_page, $protected_pages)) {
         header("Location: login.php");
         exit;
     }
-    
+
     if (isset($_SESSION['user']['status']) && $_SESSION['user']['status'] == 'en_attente') {
         header("Location: attente_validation.php");
         exit;
     }
-    
+
     if (isset($_SESSION['user']['status']) && $_SESSION['user']['status'] == 'rejete') {
         header("Location: compte_rejete.php");
         exit;
@@ -49,11 +50,11 @@ if (in_array($current_page, $protected_pages)) {
     <header class="main-header">
         <div class="header-top">
             <div class="logo">
-                <a>Uni<span>Share</span></a>
+                <a href="<?php echo $base_path; ?>index.php">Uni<span>Share</span></a>
             </div>
 
             <div class="search-box">
-                <form action="products/search.php" method="GET">
+                <form action="<?php echo $base_path; ?>products/catalogue.php" method="GET">
                     <input type="text" name="search" placeholder="Rechercher un produit...">
                     <button type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
                 </form>
@@ -62,34 +63,34 @@ if (in_array($current_page, $protected_pages)) {
             <div class="header-actions">
                 <?php if(isset($_SESSION['user'])): ?>
                     <?php if($_SESSION['user']['role'] == 'admin'): ?>
-                        <a title="Administration" style="background: var(--primary); color: var(--dark); padding: 8px 15px; border-radius: 20px; text-decoration: none; font-weight: bold;">
+                        <a href="<?php echo $base_path; ?>admin/dashboard_admin.php" title="Administration" style="background: var(--primary); color: var(--dark); padding: 8px 15px; border-radius: 20px; text-decoration: none; font-weight: bold;">
                             <i class="fa-solid fa-shield-haltered"></i> Admin
                         </a>
-                        
+
                     <?php endif; ?>
                     <?php if ($_SESSION['user']['role'] !== 'admin'): ?>
-                        <a href="profile.php" title="Mon Compte">
+                        <a href="<?php echo $base_path; ?>profile.php" title="Mon Compte">
                             <i class="fa-regular fa-user"></i>
                         </a>
                     <?php endif; ?>
-                    <a href="logout.php" title="Déconnexion"><i class="fa-solid fa-arrow-right-from-bracket"></i></a>
+                    <a href="<?php echo $base_path; ?>logout.php" title="Déconnexion"><i class="fa-solid fa-arrow-right-from-bracket"></i></a>
                 <?php else: ?>
-                    <a href="login.php" class="login-link">Connexion</a>
-                    <a href="register.php" class="btn-register">S'inscrire</a>
+                    <a href="<?php echo $base_path; ?>login.php" class="login-link">Connexion</a>
+                    <a href="<?php echo $base_path; ?>register.php" class="btn-register">S'inscrire</a>
                 <?php endif; ?>
             </div>
         </div>
 
         <nav class="bottom-nav">
             <ul>
-                <li><a href="index.php">Accueil</a></li>
-                <li><a href="catalogue.php">Catalogue</a></li>
+                <li><a href="<?php echo $base_path; ?>index.php">Accueil</a></li>
+                <li><a href="<?php echo $base_path; ?>products/catalogue.php">Catalogue</a></li>
                 <?php if(isset($_SESSION['user']) && $_SESSION['user']['role'] == 'admin'): ?>
-                    <li><a href="admin/validate_users.php">Validations</a></li>
-                    <li><a href="admin/dashboard_admin.php">Statistiques</a></li>
+                    <li><a href="<?php echo $base_path; ?>admin/validate_users.php">Validations</a></li>
+                    <li><a href="<?php echo $base_path; ?>admin/dashboard_admin.php">Statistiques</a></li>
                 <?php endif; ?>
             </ul>
         </nav>
     </header>
-    
+
     <main>
