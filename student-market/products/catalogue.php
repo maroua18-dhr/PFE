@@ -54,9 +54,11 @@ $products = $stmt->fetchAll();
             <?php endforeach; ?>
         <?php else: ?>
             <div class="empty-state">
-                <i class="fa-solid fa-magnifying-glass"></i>
-                <p>Aucun article ne correspond à votre recherche.</p>
-                <a href="catalogue.php" class="btn-view">Voir tout le catalogue</a>
+                <i class="fa-solid <?php echo $search !== '' ? 'fa-magnifying-glass' : 'fa-box-open'; ?>"></i>
+                <p><?php echo $search !== '' ? 'Aucun article ne correspond à votre recherche.' : 'Aucun article disponible pour le moment.'; ?></p>
+                <?php if ($search !== ''): ?>
+                    <a href="catalogue.php" class="btn-view">Voir tout le catalogue</a>
+                <?php endif; ?>
             </div>
         <?php endif; ?>
     </div>
